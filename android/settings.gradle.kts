@@ -23,3 +23,23 @@ plugins {
 }
 
 include(":app")
+
+// Force one shared NDK (29.0, already provisioned locally) for every project that
+// uses the Android plugin (app + all flutter plugin subprojects). Without this,
+// AGP auto-installs Flutter's pinned 28.2 in a second NDK copy (~2.2G extra disk).
+gradle.projectsLoaded {
+    rootProject.subprojects {
+        // Runs during configuration phase, before each project's evaluation finishes.
+        if (name != "app" && name != "flutter") {
+            afterEvaluate {
+                extensions.findByName("android")?.let { ext ->
+                    if (ext is com.android.build.gradle.BaseExtension) {
+                        ext.ndkVersion = "29.0.14206865"
+                    } else if (ext is com.android.build.gradle.LibraryExtension) {
+                        ext.ndkVersion = "29.0.14206865"
+                    }
+                }
+            }
+        }
+    }
+}

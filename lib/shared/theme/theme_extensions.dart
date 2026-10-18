@@ -1207,7 +1207,8 @@ bool _usesAppleTypographyRamp(TargetPlatform platform) {
 ///
 /// Content and product UI use one stable hierarchy on every platform.
 class AppTypography {
-  static const String? fontFamily = null;
+  static const String? fontFamily = 'AnthropicSans';
+  static const String? serifFontFamily = 'AnthropicSerif';
   static String get monospaceFontFamily =>
       _usesAppleTypographyRamp(defaultTargetPlatform) ? 'Menlo' : 'monospace';
 
@@ -1224,7 +1225,8 @@ class AppTypography {
       ? _appleScale
       : _materialScale;
 
-  static TextStyle _primaryFont(TextStyle style) => style;
+  static TextStyle _primaryFont(TextStyle style) =>
+      style.copyWith(fontFamily: fontFamily, fontFamilyFallback: const ['Roboto', 'sans-serif']);
 
   static TextStyle _monospaceFont(TextStyle style) =>
       style.copyWith(fontFamily: monospaceFontFamily);
@@ -1267,7 +1269,9 @@ class AppTypography {
 
   static TextStyle get codeStyle => _monospaceFont(_scale.codeStyle);
 
-  static TextStyle get chatMessageStyle => bodyLargeStyle;
+  static TextStyle get chatMessageStyle => serifFontFamily == null
+      ? bodyLargeStyle
+      : bodyLargeStyle.copyWith(fontFamily: serifFontFamily, fontFamilyFallback: const ['AnthropicSans', 'Roboto', 'sans-serif']);
 
   static TextStyle get chatCodeStyle => codeStyle;
 
@@ -1328,22 +1332,32 @@ class AppTypography {
     required Color primary,
     required Color secondary,
     required Color tertiary,
-  }) => _scale.textTheme(
-    primary: primary,
-    secondary: secondary,
-    tertiary: tertiary,
-  );
+  }) => _scale
+      .textTheme(
+        primary: primary,
+        secondary: secondary,
+        tertiary: tertiary,
+      )
+      .apply(
+        fontFamily: fontFamily,
+        fontFamilyFallback: const ['Roboto', 'sans-serif'],
+      );
 
   /// Material typography reserved for genuine Material navigation chrome.
   static TextTheme materialChromeTextTheme({
     required Color primary,
     required Color secondary,
     required Color tertiary,
-  }) => _materialScale.textTheme(
-    primary: primary,
-    secondary: secondary,
-    tertiary: tertiary,
-  );
+  }) => _materialScale
+      .textTheme(
+        primary: primary,
+        secondary: secondary,
+        tertiary: tertiary,
+      )
+      .apply(
+        fontFamily: fontFamily,
+        fontFamilyFallback: const ['Roboto', 'sans-serif'],
+      );
 
   static TextStyle get materialChromeLabelSmallStyle =>
       _primaryFont(_materialScale.labelSmallStyle);

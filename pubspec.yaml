@@ -183,7 +183,83 @@ flutter:
   generate: true
   # Localization
   # ARB files live in lib/l10n (configured via l10n.yaml)
-  
+
+  fonts:
+    - family: AnthropicSans
+      fonts:
+        - asset: assets/fonts/AnthropicSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/AnthropicSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/AnthropicSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/AnthropicSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/AnthropicSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/AnthropicSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/AnthropicSans-Black.ttf
+          weight: 900
+        - asset: assets/fonts/AnthropicSans-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/AnthropicSans-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/AnthropicSans-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/AnthropicSans-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/AnthropicSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/AnthropicSans-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/AnthropicSans-BlackItalic.ttf
+          weight: 900
+          style: italic
+    - family: AnthropicSerif
+      fonts:
+        - asset: assets/fonts/AnthropicSerif-Light.ttf
+          weight: 300
+        - asset: assets/fonts/AnthropicSerif-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/AnthropicSerif-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/AnthropicSerif-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/AnthropicSerif-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/AnthropicSerif-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/AnthropicSerif-Black.ttf
+          weight: 900
+        - asset: assets/fonts/AnthropicSerif-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/AnthropicSerif-BlackItalic.ttf
+          weight: 900
+          style: italic
+
   assets:
     - THIRD_PARTY_NOTICES.md
     - assets/icons/
