@@ -1,0 +1,87 @@
+name: Font APK
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: font-apk
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build arm64 font APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - parallel:
+          - name: Set Up Java
+            uses: actions/setup-java@v4
+            with:
+              distribution: 'temurin'
+              java-version: '21'
+          - name: Setup Gradle and caching
+            uses: gradle/actions/setup-gradle@v3
+            with:
+              cache-read-only: false
+          - name: Set Up Flutter
+            uses: subosito/flutter-action@v2
+            with:
+              channel: 'stable'
+              cache: true
+          - name: Fetch third_party submodules
+            run: git submodule update --init --recursive --depth 1 third_party/katex third_party/mermaid
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Generate code (app)
+        run: dart run build_runner build
+
+      - name: Generate code (workspace members)
+        shell: bash
+        run: |
+          for dir in packages/*; do
+            if [ -f "$dir/pubspec.yaml" ] && grep -q '^  build_runner:' "$dir/pubspec.yaml"; then
+              echo "::group::build_runner in $dir"
+              (cd "$dir" && dart run build_runner build --delete-conflicting-outputs)
+              echo "::endgroup::"
+            fi
+          done
+
+      # Forks have no keystore secret. Upstream build.gradle.kts silently falls
+      # back to an UNsigned APK when key.properties is missing (uninstallable),
+      # so generate a self-signed one instead when the secret is absent.
+      - name: Generate self-signed keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        if: env.ANDROID_KEYSTORE_BASE64 == ''
+        run: |
+          keytool -genkeypair -v -keystore app/conduit-keystore.jks \
+            -alias conduit -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass conduitbuild -keypass conduitbuild \
+            -dname "CN=Conduit Font Build, O=bruhnet, C=US"
+          {
+            echo "storeFile=conduit-keystore.jks"
+            echo "storePassword=conduitbuild"
+            echo "keyAlias=conduit"
+            echo "keyPassword=conduitbuild"
+          } > key.properties
+        working-directory: android
+
+      - name: Build APK (arm64, split)
+        run: flutter build apk --release --split-per-abi --target-platform android-arm64
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Font-APK
+          path: build/app/outputs/flutter-apk/*release.apk
+          if-no-files-found: error
